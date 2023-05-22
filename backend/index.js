@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
 
 app.get('/books', (req,res) => {
     const q = 'SELECT * FROM BOOKS'
-    db.query(q, (err, data) => {
+    db.query(q, (err, data) => {  
         if (err) return res.json(err)
         return res.json(data)
     })

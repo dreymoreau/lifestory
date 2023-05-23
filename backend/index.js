@@ -1,13 +1,15 @@
 const express = require('express')
-const mysql2 = require('mysql2')
 const cors = require('cors')
+const app = express()
+const dotenv = require('dotenv')
 const PORT = 8880
 
-const app = express()
+global.db = require('../backend/db');
+dotenv.config();
 
-const db = process.env.db
 
 // express middleware
+app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 app.use(cors())
 

@@ -42,6 +42,8 @@ const Add = () => {
       </div>
 
       <button onClick={handleClick}>Add</button>
+
+      <a href="/" target="_blank" rel="noopener noreferrer">Home</a>
     </div>
   )
 }

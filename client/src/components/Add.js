@@ -32,18 +32,18 @@ const Add = () => {
 
   console.log(book)
   return (
-    <div>
+    <div className="flex flex-col h-screen bg-gradient-to-b from-green-800 to-blue-600 p-4 text-black">
       <div className='form'>
-       <h1>Add new Book</h1>
-        <input type='text' placeholder='title' onChange={handleChange} name='title'/>
-        <input type='text' placeholder='desc' onChange={handleChange} name='desc'/>
-        <input type='file' placeholder='cover' onChange={handleChange} name='cover'/>
-        <input type='date' placeholder='date' onChange={handleChange} name='date'/>
+       <h1 className='flex justify-center align-center'>Add new Book</h1>
+        <input type='text' placeholder='title' onChange={handleChange} name='title'className='form flex p-4 justify-center align-center mx-auto my-10 '/>
+        <input type='text' placeholder='author' onChange={handleChange} name='desc'className='form flex p-4 justify-center align-center mx-auto my-10'/>
+        <input type='file' placeholder='cover' onChange={handleChange} name='cover' className='form flex p-4 justify-center align-center mx-auto my-10'/>
+        <input type='date' placeholder='date' onChange={handleChange} name='date' className='form flex p-4 justify-center align-center mx-auto my-10'/>
       </div>
 
       <button onClick={handleClick}>Add</button>
 
-      <a href="/" target="_blank" rel="noopener noreferrer">Home</a>
+      <a href="/" target="_blank" rel="noopener noreferrer" className='flex justify-center align-center'>Home</a>
     </div>
   )
 }

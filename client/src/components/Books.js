@@ -30,7 +30,7 @@ const Books = () => {
         }
     }
   return (
-        <div class="flex flex-col h-screen bg-gradient-to-b from-red-800 to-amber-600 p-4 text-white">
+        <div className="flex flex-col h-screen bg-gradient-to-b from-red-800 to-amber-600 p-4 text-white">
         <h1 className='flex p-4 justify-center max-w-screen-lg mx-auto h-full'>lifestory book shop</h1>
         <div className='books w-full grid grid-cols-2 sm:grid-cols-3 gap-8 text-center py-8 px-12 sm:px-0'>
             {books.map(book => (
@@ -39,8 +39,8 @@ const Books = () => {
                     <h2>{book.title}</h2>
                     <p>{book.desc}</p>
                     <span>{book.date}</span>
-                    <button className='delete' onClick={() => handleDelete(book.id)}>Delete</button>
-                    <button className='update'>Update</button>
+                    <button className='delete block mx-auto' onClick={() => handleDelete(book.id)}>Delete</button>
+                    <button className='update block mx-auto'>Update</button>
                 </div>
             ))}
         </div>

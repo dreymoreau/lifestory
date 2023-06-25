@@ -6,7 +6,8 @@ const path = require('path')
 const dotenv = require('dotenv')
 const PORT = 8880
 
-global.db = require('../backend/db');
+global.db = require('../backend/config/db');
+
 dotenv.config();
 
 
@@ -19,6 +20,22 @@ app.use(cors({
     credentials: true
 }))
 app.use('/', express.static(path.join(__dirname, '/')));
+
+
+const storage = multer.diskStorage({
+    destination: (req,file,cb) => {
+        cb(null, 'public/images')
+    },
+        filename: function(req,file,cb){
+            cb(null, file.fieldname + "_" + Date.now() + path.extname(file.originalname))
+            // const ext = file.mimetype.split('/')[1]
+            // cb(null, `uploads/${file.originalname}-${Date.now()}.${ext}`);
+        }
+})
+
+const upload = multer({
+    storage: storage
+})
 
 // if there is a auth problem
 app.get('/', (req, res) => {
@@ -33,24 +50,32 @@ app.get('/books', (req,res) => {
     })
 })
 
-app.get('/api/image', (req,res) => {
-
-    const id = 1
-    const sqlInsert = "SELECT * FROM images WHERE id = ?;"
-    connection.query(sqlInsert, [id] , (err, result) => {
-        if(err) {
-            console.log(err)
-            res.send({
-                msg: err
-            })
-        }
-        if(result) {
-            res.send({
-                image: result[0].image
-            })
-        }
+app.get('/', (req, res) => {
+    const sql = "SELECT * FROM images WHERE id = ?"
+    db.query(sql, (err, result) =>{
+        if(err) return res.json('Error')
+        return res.json(result)
     })
 })
+
+// app.get('/api/image', (req,res) => {
+
+//     const id = 1
+//     const sqlInsert = "SELECT * FROM images WHERE id = ?;"
+//     connection.query(sqlInsert, [id] , (err, result) => {
+//         if(err) {
+//             console.log(err)
+//             res.send({
+//                 msg: err
+//             })
+//         }
+//         if(result) {
+//             res.send({
+//                 image: result[0].image
+//             })
+//         }
+//     })
+// })
 
 app.post('/books', (req,res) => {
     const q = 'INSERT INTO books (`title`, `desc`, `cover`, `date`) VALUES (?)'
@@ -67,31 +92,39 @@ app.post('/books', (req,res) => {
     })
 })
 
-app.post('/api/image', upload.single('image'), (req, res, err) => {
-    if (!req.file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
-        res.send({ msg:'Only image files (jpg, jpeg, png) are allowed!'});
-    } else {
-        const image = req.file.filename;
-        const id = 1
-        const sqlInsert = "UPDATE images SET `image` = ? WHERE id = ?;"
-        connection.query(sqlInsert, [image, id] , (err, result) => {
-            if(err) {
-                console.log(err)
-                res.send({
-                    msg: err
-                })
-            }
-            if(result) {
-                res.send({
-                    data: result,
-                    msg: 'Your image has been updated'
-                })
-            }
+app.post('/upload', upload.single('image'), (req,res) =>{
+    const image = req.file.filename;
+    const sql = "UPDATE books SET image = ?"
+    db.query(sql [image], (err, result) =>{
+        if(err) return res.json({Message: 'Error'})
+        return res.json({Status: "Success"})
     })
-    }
 })
+// app.post('/api/image', upload.single('image'), (req, res, err) => {
+//     if (!req.file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
+//         res.send({ msg:'Only image files (jpg, jpeg, png) are allowed!'});
+//     } else {
+//         const image = req.file.filename;
+//         const id = 1
+//         const sqlInsert = "UPDATE images SET `image` = ? WHERE id = ?;"
+//         connection.query(sqlInsert, [image, id] , (err, result) => {
+//             if(err) {
+//                 console.log(err)
+//                 res.send({
+//                     msg: err
+//                 })
+//             }
+//             if(result) {
+//                 res.send({
+//                     data: result,
+//                     msg: 'Your image has been updated'
+//                 })
+//             }
+//     })
+//     }
+// })
 
-app.delete('/books/:id', (req, res)=> {
+app.delete('books/:id', (req, res)=> {
     const bookId = req.params.id;
     const q = 'DELETE FROM books WHERE id = ?'
 
@@ -101,17 +134,6 @@ app.delete('/books/:id', (req, res)=> {
     })
 })
 
-const storage = multer.diskStorage({
-    destination: (req,file,cb) => {
-        cb(null, './');},
-        filename: function(req,file,cb){
-            const ext = file.mimetype.split('/')[1]
-            cb(null, `uploads/${file.originalname}-${Date.now()}.${ext}`);
-        }
-})
-const upload = multer({
-    storage: storage
-})
 app.listen(PORT, () => {
     console.log(`connected to backend port ${PORT}!`)
 })
